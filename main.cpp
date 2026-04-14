@@ -1,8 +1,9 @@
 #include <iostream>
 #include <string>
-#include <stdexcept>
 #include <map>
+#include <stdexcept>
 #include "utils.hpp"
+#include "bcrypt/BCrypt.hpp"
 using namespace std;
 
 int main() {
@@ -38,14 +39,14 @@ int main() {
    		 }
 		cout << "Enter password: ";
 		getline(cin, password);
-		user_db[email] = password;
+		user_db[email] = BCrypt::generateHash(password);
 		cout << "Account created"<< endl;
 	}else if (choice == "2" && !isLoggedIn){
 		cout << "Enter email: ";
 		getline(cin, email);
 		cout << "Enter password: ";
 		getline(cin, password);
-		if (user_db.find(email) != user_db.end() && user_db[email] == password) {
+		if (user_db.find(email) != user_db.end() && BCrypt::validatePassword(password, user_db[email])) {
 			isLoggedIn = true;
 			cout << "Successfully logged in" << endl;
 		}else {
